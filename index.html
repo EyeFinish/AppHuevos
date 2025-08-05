@@ -156,11 +156,54 @@
         font-weight: bold;
       }
       
-      .opcion-cantidad:has(input[type="radio"]:checked) {
-        border-color: #FFD700;
-        background: rgba(255, 215, 0, 0.08);
-        box-shadow: 0 3px 10px rgba(255, 215, 0, 0.2);
-      }
+             .opcion-cantidad:has(input[type="radio"]:checked) {
+         border-color: #FFD700;
+         background: rgba(255, 215, 0, 0.08);
+         box-shadow: 0 3px 10px rgba(255, 215, 0, 0.2);
+       }
+       
+       .metodo-pago-opciones {
+         display: grid;
+         grid-template-columns: repeat(2, 1fr);
+         gap: 12px;
+         margin-bottom: 15px;
+       }
+       
+       .opcion-pago {
+         display: flex;
+         align-items: center;
+         padding: 15px;
+         border: 2px solid #e0e0e0;
+         border-radius: 12px;
+         cursor: pointer;
+         transition: all 0.3s ease;
+         background: #fafafa;
+         font-weight: 500;
+       }
+       
+       .opcion-pago:hover {
+         border-color: #FFD700;
+         background: white;
+         transform: translateY(-1px);
+         box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15);
+       }
+       
+       .opcion-pago input[type="radio"] {
+         margin-right: 10px;
+         width: auto;
+         accent-color: #FFD700;
+       }
+       
+       .opcion-pago input[type="radio"]:checked + .opcion-texto {
+         color: #333;
+         font-weight: bold;
+       }
+       
+       .opcion-pago:has(input[type="radio"]:checked) {
+         border-color: #FFD700;
+         background: rgba(255, 215, 0, 0.08);
+         box-shadow: 0 3px 10px rgba(255, 215, 0, 0.2);
+       }
      
            .precio-container {
         background: linear-gradient(135deg, #f8f8f8, #f0f0f0);
@@ -277,14 +320,18 @@
           font-size: 1.8rem;
         }
         
-        .cantidad-opciones {
-          grid-template-columns: 1fr;
-        }
-        
-        .btn-buscar {
-          padding: 10px 20px;
-          font-size: 0.85rem;
-        }
+               .cantidad-opciones {
+         grid-template-columns: 1fr;
+       }
+       
+       .metodo-pago-opciones {
+         grid-template-columns: 1fr;
+       }
+       
+       .btn-buscar {
+         padding: 10px 20px;
+         font-size: 0.85rem;
+       }
         
         .precio-display {
           font-size: 2rem;
@@ -337,9 +384,9 @@
          </div>
        </div>
        
-       <div class="form-group">
-        <label for="ubicacion">Ubicación de entrega</label>
-                 <div class="mapa-container">
+              <div class="form-group">
+         <label for="ubicacion">Ubicación de entrega</label>
+         <div class="mapa-container">
            <input type="text" id="direccion-input" placeholder="Escribe una dirección..." />
            <button type="button" id="btn-buscar" class="btn-buscar">
              <span class="buscar-icon">🔍</span>
@@ -350,9 +397,23 @@
            <input type="hidden" id="longitud" />
            <textarea id="ubicacion" placeholder="Dirección seleccionada aparecerá aquí" rows="2" required readonly></textarea>
          </div>
-      </div>
-      
-      <button type="submit">
+       </div>
+       
+       <div class="form-group">
+         <label for="metodo-pago">Método de pago</label>
+         <div class="metodo-pago-opciones">
+           <label class="opcion-pago">
+             <input type="radio" name="metodo-pago" value="efectivo" required>
+             <span class="opcion-texto">💵 Efectivo</span>
+           </label>
+           <label class="opcion-pago">
+             <input type="radio" name="metodo-pago" value="tarjeta" required>
+             <span class="opcion-texto">💳 Tarjeta</span>
+           </label>
+         </div>
+       </div>
+       
+       <button type="submit">
         <span class="whatsapp-icon">📱</span>
         Pedir por WhatsApp
       </button>
@@ -540,60 +601,69 @@
      // Calcular precio cuando cambia la cantidad personalizada
      document.getElementById('cantidad-personalizada').addEventListener('input', calcularPrecio);
     
-    // Manejar formulario
-    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      
-      const nombre = document.getElementById("nombre").value.trim();
-      const cantidadSeleccionada = document.querySelector('input[name="cantidad"]:checked');
-      const cantidadPersonalizada = document.getElementById("cantidad-personalizada").value.trim();
-      const ubicacion = document.getElementById("ubicacion").value.trim();
-      const latitud = document.getElementById("latitud").value;
-      const longitud = document.getElementById("longitud").value;
+         // Manejar formulario
+     document.getElementById("pedidoForm").addEventListener("submit", function(e) {
+       e.preventDefault();
+       
+       const nombre = document.getElementById("nombre").value.trim();
+       const cantidadSeleccionada = document.querySelector('input[name="cantidad"]:checked');
+       const cantidadPersonalizada = document.getElementById("cantidad-personalizada").value.trim();
+       const ubicacion = document.getElementById("ubicacion").value.trim();
+       const latitud = document.getElementById("latitud").value;
+       const longitud = document.getElementById("longitud").value;
+       const metodoPago = document.querySelector('input[name="metodo-pago"]:checked');
 
-      if (!cantidadSeleccionada) {
-        alert("Por favor, selecciona una cantidad de huevos.");
-        return;
-      }
+       if (!cantidadSeleccionada) {
+         alert("Por favor, selecciona una cantidad de huevos.");
+         return;
+       }
 
-      let cantidad = cantidadSeleccionada.value;
-      if (cantidad === 'otros') {
-        if (!cantidadPersonalizada || cantidadPersonalizada < 1) {
-          alert("Por favor, especifica una cantidad válida.");
-          return;
-        }
-        cantidad = cantidadPersonalizada;
-      }
+       if (!metodoPago) {
+         alert("Por favor, selecciona un método de pago.");
+         return;
+       }
 
-      if (!ubicacion) {
-        alert("Por favor, selecciona una ubicación en el mapa.");
-        return;
-      }
+       let cantidad = cantidadSeleccionada.value;
+       if (cantidad === 'otros') {
+         if (!cantidadPersonalizada || cantidadPersonalizada < 1) {
+           alert("Por favor, especifica una cantidad válida.");
+           return;
+         }
+         cantidad = cantidadPersonalizada;
+       }
 
-             // Número de WhatsApp de Benjamin Riveros
+       if (!ubicacion) {
+         alert("Por favor, selecciona una ubicación en el mapa.");
+         return;
+       }
+
+       // Número de WhatsApp de Benjamin Riveros
        const numeroWhatsApp = "56956130912"; // Formato: código país + número sin espacios
 
-             const precioTotal = cantidad * 250;
+       const precioTotal = cantidad * 250;
+       const metodoPagoTexto = metodoPago.value === 'efectivo' ? '💵 Efectivo' : '💳 Tarjeta';
+       
+       // Crear link de ubicación para Google Maps
+       const linkUbicacion = `https://www.google.com/maps?q=${latitud},${longitud}`;
+       
        const mensaje = `Hola! Soy ${nombre}. 
 
 Quiero hacer un pedido de ${cantidad} huevos.
 
 💰 Precio total: $${precioTotal.toLocaleString('es-CL')} CLP
-📍 Mi ubicación es: ${ubicacion}
-🌍 Coordenadas: ${latitud}, ${longitud}
-
-💵 Pago en efectivo al momento de la entrega.
+📍 Ubicación: ${linkUbicacion}
+${metodoPagoTexto} al momento de la entrega.
 
 ¡Gracias! 🥚`;
 
-      const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-      
-      // Abrir WhatsApp en nueva pestaña
-      window.open(url, "_blank");
-      
-      // Mostrar mensaje de confirmación
-      alert("¡Perfecto! Se abrirá WhatsApp con tu pedido. Si no se abre automáticamente, copia el mensaje y envíalo manualmente.");
-    });
+       const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+       
+       // Abrir WhatsApp en nueva pestaña
+       window.open(url, "_blank");
+       
+       // Mostrar mensaje de confirmación
+       alert("¡Perfecto! Se abrirá WhatsApp con tu pedido. Si no se abre automáticamente, copia el mensaje y envíalo manualmente.");
+     });
     
     // Inicializar mapa cuando se carga la página
     window.addEventListener('load', initMap);
