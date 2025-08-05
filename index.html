@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pedido de Huevos</title>
+     <style>
+     * {
+       margin: 0;
+       padding: 0;
+       box-sizing: border-box;
+     }
+     
+           body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 50%, #f5f5f5 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      
+      .form-container {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 25px;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 500px;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid #e0e0e0;
+      }
+      
+      .form-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #FFD700, #FFA500);
+      }
+     
+           .form-container h2 {
+        margin-bottom: 2rem;
+        text-align: center;
+        color: #333;
+        font-size: 2.2rem;
+        font-weight: 700;
+      }
+      
+      .form-group {
+        margin-bottom: 1.8rem;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 0.8rem;
+        color: #555;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+     
+           input, textarea {
+        width: 100%;
+        padding: 1.2rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #fafafa;
+        font-weight: 500;
+      }
+      
+      input:focus, textarea:focus {
+        outline: none;
+        border-color: #FFD700;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+        transform: translateY(-1px);
+      }
+     
+           button {
+        width: 100%;
+        padding: 1.2rem;
+        background: linear-gradient(135deg, #555, #666);
+        color: white;
+        font-weight: bold;
+        border: 2px solid #555;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #333;
+        border-color: #FFD700;
+      }
+      
+      button:active {
+        transform: translateY(0);
+      }
+     
+     .whatsapp-icon {
+       display: inline-block;
+       margin-right: 10px;
+       font-size: 1.3rem;
+     }
+     
+           .cantidad-opciones {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+      
+      .opcion-cantidad {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #fafafa;
+        font-weight: 500;
+      }
+      
+      .opcion-cantidad:hover {
+        border-color: #FFD700;
+        background: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15);
+      }
+      
+      .opcion-cantidad input[type="radio"] {
+        margin-right: 10px;
+        width: auto;
+        accent-color: #FFD700;
+      }
+      
+      .opcion-cantidad input[type="radio"]:checked + .opcion-texto {
+        color: #333;
+        font-weight: bold;
+      }
+      
+      .opcion-cantidad:has(input[type="radio"]:checked) {
+        border-color: #FFD700;
+        background: rgba(255, 215, 0, 0.08);
+        box-shadow: 0 3px 10px rgba(255, 215, 0, 0.2);
+      }
+     
+           .precio-container {
+        background: linear-gradient(135deg, #f8f8f8, #f0f0f0);
+        padding: 20px;
+        border-radius: 15px;
+        border: 2px solid #e0e0e0;
+        margin: 25px 0;
+        position: relative;
+      }
+      
+      .precio-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #FFD700, #FFA500);
+        border-radius: 15px 15px 0 0;
+      }
+      
+      .precio-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      
+      .precio-simbolo {
+        font-size: 2rem;
+        color: #FFD700;
+      }
+      
+      .precio-texto {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #666;
+      }
+      
+      .precio-info {
+        text-align: center;
+        color: #666;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+     
+     .mapa-container {
+       position: relative;
+     }
+     
+           .btn-buscar {
+        background: linear-gradient(135deg, #666, #777);
+        color: white;
+        border: 2px solid #666;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        margin-top: 8px;
+        text-transform: none;
+        letter-spacing: 0.3px;
+      }
+      
+      .btn-buscar:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #333;
+        border-color: #FFD700;
+      }
+      
+      .btn-buscar:active {
+        transform: translateY(0);
+      }
+      
+      .buscar-icon {
+        font-size: 14px;
+      }
+     
+           #mapa {
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+      }
+      
+      .info-text {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.5;
+        font-weight: 600;
+        background: #f8f8f8;
+        padding: 15px;
+        border-radius: 12px;
+        border: 2px solid #e0e0e0;
+      }
+     
+           @media (max-width: 480px) {
+        .form-container {
+          padding: 2rem;
+          margin: 10px;
+        }
+        
+        .form-container h2 {
+          font-size: 1.8rem;
+        }
+        
+        .cantidad-opciones {
+          grid-template-columns: 1fr;
+        }
+        
+        .btn-buscar {
+          padding: 10px 20px;
+          font-size: 0.85rem;
+        }
+        
+        .precio-display {
+          font-size: 2rem;
+        }
+      }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>🥚 Pedido de Huevos</h2>
+    <form id="pedidoForm">
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="cantidad">Cantidad de huevos</label>
+        <div class="cantidad-opciones">
+          <label class="opcion-cantidad">
+            <input type="radio" name="cantidad" value="12" required>
+            <span class="opcion-texto">12 huevos</span>
+          </label>
+          <label class="opcion-cantidad">
+            <input type="radio" name="cantidad" value="20" required>
+            <span class="opcion-texto">20 huevos</span>
+          </label>
+          <label class="opcion-cantidad">
+            <input type="radio" name="cantidad" value="30" required>
+            <span class="opcion-texto">30 huevos</span>
+          </label>
+          <label class="opcion-cantidad">
+            <input type="radio" name="cantidad" value="otros" required>
+            <span class="opcion-texto">Otros</span>
+          </label>
+        </div>
+                 <input type="number" id="cantidad-personalizada" placeholder="Especifica cantidad" min="1" style="display: none; margin-top: 10px;" />
+       </div>
+       
+       <div class="form-group precio-container">
+         <label>Precio total</label>
+         <div class="precio-display">
+           <span class="precio-simbolo">$</span>
+           <span id="precio-total">0</span>
+           <span class="precio-texto">CLP</span>
+         </div>
+         <div class="precio-info">
+           <span class="precio-unitario">Precio por huevo: $250 CLP</span>
+         </div>
+       </div>
+       
+       <div class="form-group">
+        <label for="ubicacion">Ubicación de entrega</label>
+                 <div class="mapa-container">
+           <input type="text" id="direccion-input" placeholder="Escribe una dirección..." />
+           <button type="button" id="btn-buscar" class="btn-buscar">
+             <span class="buscar-icon">🔍</span>
+             Buscar ubicación
+           </button>
+           <div id="mapa" style="height: 200px; width: 100%; margin-top: 15px; border-radius: 12px;"></div>
+           <input type="hidden" id="latitud" />
+           <input type="hidden" id="longitud" />
+           <textarea id="ubicacion" placeholder="Dirección seleccionada aparecerá aquí" rows="2" required readonly></textarea>
+         </div>
+      </div>
+      
+      <button type="submit">
+        <span class="whatsapp-icon">📱</span>
+        Pedir por WhatsApp
+      </button>
+    </form>
+    
+    <div class="info-text">
+      <p>✅ Pago en efectivo al momento de la entrega</p>
+      <p>🚚 Entrega en 24-48 horas</p>
+    </div>
+  </div>
+
+  <!-- Leaflet CSS y JS para OpenStreetMap -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <script>
+    let map;
+    let marker;
+    
+    // Inicializar mapa cuando se carga la página
+    function initMap() {
+      // Coordenadas por defecto (Santiago, Chile)
+      const defaultLocation = [-33.4489, -70.6693];
+      
+      // Crear mapa con OpenStreetMap
+      map = L.map('mapa').setView(defaultLocation, 15);
+      
+      // Agregar capa de OpenStreetMap
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+      
+      // Crear marcador
+      marker = L.marker(defaultLocation, {
+        draggable: true
+      }).addTo(map);
+      
+      // Evento cuando se arrastra el marcador
+      marker.on('dragend', function(event) {
+        const position = event.target.getLatLng();
+        
+        // Actualizar campos ocultos
+        document.getElementById("latitud").value = position.lat;
+        document.getElementById("longitud").value = position.lng;
+        
+        // Obtener dirección desde coordenadas usando Nominatim
+        getAddressFromCoords(position.lat, position.lng);
+      });
+      
+      // Evento cuando se hace clic en el mapa
+      map.on('click', function(event) {
+        marker.setLatLng(event.latlng);
+        
+        // Actualizar campos ocultos
+        document.getElementById("latitud").value = event.latlng.lat;
+        document.getElementById("longitud").value = event.latlng.lng;
+        
+        // Obtener dirección desde coordenadas
+        getAddressFromCoords(event.latlng.lat, event.latlng.lng);
+      });
+      
+      // Evento para el campo de búsqueda de dirección
+      document.getElementById("direccion-input").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          searchAddress(this.value);
+        }
+      });
+      
+      // Evento para el botón de búsqueda
+      document.getElementById("btn-buscar").addEventListener("click", function() {
+        const direccion = document.getElementById("direccion-input").value.trim();
+        if (direccion) {
+          searchAddress(direccion);
+        } else {
+          alert("Por favor, escribe una dirección para buscar.");
+        }
+      });
+    }
+    
+    // Función para buscar dirección
+    function searchAddress(query) {
+      const btnBuscar = document.getElementById("btn-buscar");
+      const textoOriginal = btnBuscar.innerHTML;
+      
+      // Mostrar estado de carga
+      btnBuscar.innerHTML = '<span class="buscar-icon">⏳</span> Buscando...';
+      btnBuscar.disabled = true;
+      
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+      
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.length > 0) {
+            const location = data[0];
+            const lat = parseFloat(location.lat);
+            const lon = parseFloat(location.lon);
+            
+            // Actualizar mapa y marcador
+            map.setView([lat, lon], 15);
+            marker.setLatLng([lat, lon]);
+            
+            // Actualizar campos ocultos
+            document.getElementById("latitud").value = lat;
+            document.getElementById("longitud").value = lon;
+            
+            // Actualizar campo de ubicación
+            document.getElementById("ubicacion").value = location.display_name;
+            
+            // Mostrar mensaje de éxito
+            btnBuscar.innerHTML = '<span class="buscar-icon">✅</span> ¡Encontrado!';
+            setTimeout(() => {
+              btnBuscar.innerHTML = textoOriginal;
+              btnBuscar.disabled = false;
+            }, 2000);
+          } else {
+            alert("No se encontró la dirección. Por favor, intenta con otra dirección.");
+            btnBuscar.innerHTML = textoOriginal;
+            btnBuscar.disabled = false;
+          }
+        })
+        .catch(error => {
+          console.error("Error al buscar dirección:", error);
+          alert("Error al buscar la dirección. Por favor, intenta de nuevo.");
+          btnBuscar.innerHTML = textoOriginal;
+          btnBuscar.disabled = false;
+        });
+    }
+    
+    // Función para obtener dirección desde coordenadas
+    function getAddressFromCoords(lat, lon) {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`;
+      
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.display_name) {
+            document.getElementById("ubicacion").value = data.display_name;
+          }
+        })
+        .catch(error => {
+          console.error("Error al obtener dirección:", error);
+        });
+    }
+    
+         // Función para calcular precio
+     function calcularPrecio() {
+       const cantidadSeleccionada = document.querySelector('input[name="cantidad"]:checked');
+       const cantidadPersonalizada = document.getElementById('cantidad-personalizada').value;
+       const precioPorHuevo = 250;
+       let cantidad = 0;
+       
+       if (cantidadSeleccionada) {
+         if (cantidadSeleccionada.value === 'otros') {
+           cantidad = parseInt(cantidadPersonalizada) || 0;
+         } else {
+           cantidad = parseInt(cantidadSeleccionada.value) || 0;
+         }
+       }
+       
+       const precioTotal = cantidad * precioPorHuevo;
+       document.getElementById('precio-total').textContent = precioTotal.toLocaleString('es-CL');
+     }
+     
+     // Manejar opciones de cantidad
+     document.querySelectorAll('input[name="cantidad"]').forEach(function(radio) {
+       radio.addEventListener('change', function() {
+         const cantidadPersonalizada = document.getElementById('cantidad-personalizada');
+         
+         if (this.value === 'otros') {
+           cantidadPersonalizada.style.display = 'block';
+           cantidadPersonalizada.required = true;
+         } else {
+           cantidadPersonalizada.style.display = 'none';
+           cantidadPersonalizada.required = false;
+           cantidadPersonalizada.value = '';
+         }
+         
+         // Calcular precio cuando cambia la selección
+         calcularPrecio();
+       });
+     });
+     
+     // Calcular precio cuando cambia la cantidad personalizada
+     document.getElementById('cantidad-personalizada').addEventListener('input', calcularPrecio);
+    
+    // Manejar formulario
+    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      const nombre = document.getElementById("nombre").value.trim();
+      const cantidadSeleccionada = document.querySelector('input[name="cantidad"]:checked');
+      const cantidadPersonalizada = document.getElementById("cantidad-personalizada").value.trim();
+      const ubicacion = document.getElementById("ubicacion").value.trim();
+      const latitud = document.getElementById("latitud").value;
+      const longitud = document.getElementById("longitud").value;
+
+      if (!cantidadSeleccionada) {
+        alert("Por favor, selecciona una cantidad de huevos.");
+        return;
+      }
+
+      let cantidad = cantidadSeleccionada.value;
+      if (cantidad === 'otros') {
+        if (!cantidadPersonalizada || cantidadPersonalizada < 1) {
+          alert("Por favor, especifica una cantidad válida.");
+          return;
+        }
+        cantidad = cantidadPersonalizada;
+      }
+
+      if (!ubicacion) {
+        alert("Por favor, selecciona una ubicación en el mapa.");
+        return;
+      }
+
+             // Número de WhatsApp de Benjamin Riveros
+       const numeroWhatsApp = "56956130912"; // Formato: código país + número sin espacios
+
+             const precioTotal = cantidad * 250;
+       const mensaje = `Hola! Soy ${nombre}. 
+
+Quiero hacer un pedido de ${cantidad} huevos.
+
+💰 Precio total: $${precioTotal.toLocaleString('es-CL')} CLP
+📍 Mi ubicación es: ${ubicacion}
+🌍 Coordenadas: ${latitud}, ${longitud}
+
+💵 Pago en efectivo al momento de la entrega.
+
+¡Gracias! 🥚`;
+
+      const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+      
+      // Abrir WhatsApp en nueva pestaña
+      window.open(url, "_blank");
+      
+      // Mostrar mensaje de confirmación
+      alert("¡Perfecto! Se abrirá WhatsApp con tu pedido. Si no se abre automáticamente, copia el mensaje y envíalo manualmente.");
+    });
+    
+    // Inicializar mapa cuando se carga la página
+    window.addEventListener('load', initMap);
+  </script>
+
+</body>
+</html> 
